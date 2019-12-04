@@ -1,9 +1,7 @@
 import urllib.request
 import pandas as pd
 import numpy as np
-
 import torch
-
 import torch.backends.cudnn
 
 from DeepFM import DeepFM
@@ -11,6 +9,7 @@ from DeepFM import DeepFM
 class MyModel(object):
 
     __flag = False
+    __msg = None
 
     """
     Model template. You can load your model parameters in __init__ from a location accessible at runtime
@@ -44,7 +43,7 @@ class MyModel(object):
         """
 
         if self.deal_parameters(X):
-            return "parameter error %d" % self.fix
+            return "parameter error %s" % self.__msg
 
         if not self.loaded:
             self.load()
@@ -64,6 +63,7 @@ class MyModel(object):
         value = self.series.get(parameter)
         if value is None:
             self.__flag = True
+            self.__msg = parameter + " is None"
         return value
 
     def deal_parameters(self, X):
@@ -79,9 +79,11 @@ class MyModel(object):
 
         if self.base_values.size != self.base_size:
             self.__flag = True
+            self.__msg = 'baseSize check failure'
 
         if self.feature_values.size != self.feature_size:
             self.__flag = True
+            self.__msg = 'featureSize check failure'
 
         return self.__flag
 
