@@ -54,7 +54,7 @@ class MyModel(object):
             t1 = torch.tensor(x2)
             result = torch.sigmoid(self.model(t0, t1)).data
             result = self.deal_result(result.numpy())
-            return result
+            return X
         else:
             return "less is more more more more %d" % self.fix
 
