@@ -1,0 +1,4 @@
+sklearn
+torch
+seldon-core
+pandas
