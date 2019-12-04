@@ -59,7 +59,7 @@ class MyModel(object):
 
         serd = pd.Series(X)
 
-        print(X)
+        print("baseSize: " + serd.get('baseSize'))
         if self.model:
             # x1, x2 = self.trans(X)
             # t0 = torch.tensor(x1)
@@ -68,7 +68,7 @@ class MyModel(object):
             return "1"
         else:
             #return "less is more more more more %d" % self.fix
-            return serd.get('baseSize')
+            return X
 
 
     def trans(self, aim):
