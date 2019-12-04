@@ -26,9 +26,9 @@ class MyModel(object):
     def load(self):
         print("start download")
         print(self.url)
-        #urllib.request.urlretrieve(self.url, "model.m")
+        urllib.request.urlretrieve(self.url, "model.m")
         print("start loading model")
-        #self.model = torch.load('model.m', map_location=torch.device('cpu'))
+        self.model = torch.load('model.m', map_location=torch.device('cpu'))
         print("model loaded")
 
     def predict(self, X, features_names=None):
@@ -41,9 +41,8 @@ class MyModel(object):
         feature_names : array of feature names (optional)
         """
 
-        #if self.deal_parameters(X):
-            #return "parameter error %s" % self.__msg
-        return "parameter error %s" % X
+        if self.deal_parameters(X):
+            return "parameter error %s" % self.__msg
 
         if not self.loaded:
             self.load()
@@ -67,12 +66,11 @@ class MyModel(object):
         return value
 
     def deal_parameters(self, X):
-        self.dict = self.list_to_dict([X])
-        self.size = self.get_value('size')
-        self.base_size = self.get_value('baseSize')
-        self.feature_size = self.get_value('featureSize')
-        self.base_values = self.get_value('baseValues')
-        self.feature_values = self.get_value('featureValues')
+        self.size = X[0]
+        self.base_size = X[1]
+        self.base_values = X[2]
+        self.feature_size = X[3]
+        self.feature_values = X[4]
 
         self.base_values = np.array(self.base_values)
         self.feature_values = np.array(self.feature_values)
@@ -129,13 +127,10 @@ class MyModel(object):
 
         return result_dict
 
-    def list_to_dict(self, value):
-        value = list(value)
-        return eval(str(value[0]))
-
 
 #tt1 =  [[106028, 195092, 10568, 23, 147, 4, 11, 1241, 6.09887064e-01, -3.17003161e-01, -1.83307350e-01, -4.45917211e-02, -4.00365591e-02,  2.60544335e-03, -2.43274420e-02, -1.35902567e-02, -2.06686687e-02, -2.39776302e-04, -8.98106117e-03, -1.32717369e-02, -9.00286250e-03, -9.20017343e-03, -1.12582045e-02, -9.56592243e-03, -5.72999334e-03, -3.99997272e-03, -9.94744524e-03, -6.57328777e-03, -4.06617252e-03, -7.16522615e-03, -3.39697767e-03, -5.05888509e-03, -6.38805423e-03, -6.68853614e-03, -6.55218540e-03, -3.32565443e-03, -7.25812372e-03, -9.18245874e-04,  1.18093006e-03, 3.55028023e-04, -4.88233333e-03, -1.80893322e-03, -3.13342735e-03, -3.14912642e-03, -4.47223382e-03, 8.49320320e-04, -3.30703938e-03, -3.95207189e-06, -3.04178707e-03, -3.35240504e-03, -2.29544588e-03, -2.08881940e-03, -1.75165117e-03, -2.58994359e-03, 5.19961119e-04, -3.13837733e-03, -3.30228242e-03, 3.50067829e-04 ]]
 #tt = {"size": 2,"baseSize": 57, "baseValues": [106028, 10568, 23, 147, 4, 11, 1241, 6.09887064e-01, -3.17003161e-01, -1.83307350e-01, -4.45917211e-02, -4.00365591e-02,  2.60544335e-03, -2.43274420e-02, -1.35902567e-02, -2.06686687e-02, -2.39776302e-04, -8.98106117e-03, -1.32717369e-02, -9.00286250e-03, -9.20017343e-03, -1.12582045e-02, -9.56592243e-03, -5.72999334e-03, -3.99997272e-03, -9.94744524e-03, -6.57328777e-03, -4.06617252e-03, -7.16522615e-03, -3.39697767e-03, -5.05888509e-03, -6.38805423e-03, -6.68853614e-03, -6.55218540e-03, -3.32565443e-03, -7.25812372e-03, -9.18245874e-04,  1.18093006e-03, 3.55028023e-04, -4.88233333e-03, -1.80893322e-03, -3.13342735e-03, -3.14912642e-03, -4.47223382e-03, 8.49320320e-04, -3.30703938e-03, -3.95207189e-06, -3.04178707e-03, -3.35240504e-03, -2.29544588e-03, -2.08881940e-03, -1.75165117e-03, -2.58994359e-03, 5.19961119e-04, -3.13837733e-03, -3.30228242e-03, 3.50067829e-04 ], "featureSize": 2, "featureValues": [195092, 195093]}
+#tt= [2, 57, [106028, 10568, 23, 147, 4, 11, 1241, 6.09887064e-01, -3.17003161e-01, -1.83307350e-01, -4.45917211e-02, -4.00365591e-02,  2.60544335e-03, -2.43274420e-02, -1.35902567e-02, -2.06686687e-02, -2.39776302e-04, -8.98106117e-03, -1.32717369e-02, -9.00286250e-03, -9.20017343e-03, -1.12582045e-02, -9.56592243e-03, -5.72999334e-03, -3.99997272e-03, -9.94744524e-03, -6.57328777e-03, -4.06617252e-03, -7.16522615e-03, -3.39697767e-03, -5.05888509e-03, -6.38805423e-03, -6.68853614e-03, -6.55218540e-03, -3.32565443e-03, -7.25812372e-03, -9.18245874e-04,  1.18093006e-03, 3.55028023e-04, -4.88233333e-03, -1.80893322e-03, -3.13342735e-03, -3.14912642e-03, -4.47223382e-03, 8.49320320e-04, -3.30703938e-03, -3.95207189e-06, -3.04178707e-03, -3.35240504e-03, -2.29544588e-03, -2.08881940e-03, -1.75165117e-03, -2.58994359e-03, 5.19961119e-04, -3.13837733e-03, -3.30228242e-03, 3.50067829e-04 ], 2, [195092, 195093]]
 #aa = MyModel()
 #tt = np.array(tt)
 #print(aa.predict(tt))
