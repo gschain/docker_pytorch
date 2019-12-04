@@ -65,7 +65,8 @@ class MyModel(object):
             # return [torch.sigmoid(self.model(t0, t1)).data.item()]
             return "1"
         else:
-            return "less is more more more more %d" % self.fix
+            #return "less is more more more more %d" % self.fix
+            return X
 
 
     def trans(self, aim):
