@@ -26,9 +26,9 @@ class MyModel(object):
     def load(self):
         print("start download")
         print(self.url)
-        urllib.request.urlretrieve(self.url, "model.m")
+        #urllib.request.urlretrieve(self.url, "model.m")
         print("start loading model")
-        self.model = torch.load('model.m', map_location=torch.device('cpu'))
+        #self.model = torch.load('model.m', map_location=torch.device('cpu'))
         print("model loaded")
 
     def predict(self, X, features_names=None):
@@ -41,8 +41,9 @@ class MyModel(object):
         feature_names : array of feature names (optional)
         """
 
-        if self.deal_parameters(X):
-            return "parameter error %s" % self.__msg
+        #if self.deal_parameters(X):
+            #return "parameter error %s" % self.__msg
+        return "parameter error %s" % X
 
         if not self.loaded:
             self.load()
