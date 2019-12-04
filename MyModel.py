@@ -54,8 +54,8 @@ class MyModel(object):
         X : array-like
         feature_names : array of feature names (optional)
         """
-        if not self.loaded:
-            self.load()
+        # if not self.loaded:
+        #     self.load()
 
         print(X)
         if self.model:
