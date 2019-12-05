@@ -54,7 +54,7 @@ class MyModel(object):
             t1 = torch.tensor(x2)
             result = torch.sigmoid(self.model(t0, t1)).data
             result = self.deal_result(result.numpy())
-            return X
+            return np.array(result)
         else:
             return "less is more more more more %d" % self.fix
 
@@ -115,10 +115,8 @@ class MyModel(object):
 
     def deal_result(self, result):
         dict = {}
-        feature = list(self.feature_values)
-        result_list = list(result)
         for i in range(self.feature_size):
-            dict[feature[i]] = result_list[i]
+            dict[self.feature_values[i]] = result[i]
 
         result_dict = sorted(dict.items(), key=lambda x: x[1], reverse=True)
         size = len(result_dict)
