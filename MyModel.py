@@ -7,9 +7,6 @@ from DeepFM import DeepFM
 
 class MyModel(object):
 
-    __flag = False
-    __msg = None
-
     """
     Model template. You can load your model parameters in __init__ from a location accessible at runtime
     """
@@ -40,65 +37,56 @@ class MyModel(object):
         X : array-like
         feature_names : array of feature names (optional)
         """
+        # parse parameters
+        request_size = X[0]
+        base_size = X[1]
+        base_values = X[2]
+        feature_size = X[3]
+        feature_values = X[4]
+        flag = False
+        msg = None
 
-        if self.deal_parameters(X):
-            return "parameter error %s" % self.__msg
+        base_values = np.array(base_values)
+        feature_values = np.array(feature_values)
+
+        if base_values.size != base_size:
+            flag = True
+            msg = 'baseSize check failure'
+
+        if feature_values.size != feature_size:
+            flag = True
+            msg = 'featureSize check failure'
+
+        if flag:
+            return "parameter error %s" % msg
 
         if not self.loaded:
             self.load()
 
         if self.model:
-            self.generate_array()
-            x1, x2 = self.generate_torch_data()
+            new_array = self.generate_array(base_size, base_values, feature_size, feature_values)
+            x1, x2 = self.generate_torch_data(feature_size, new_array)
             t0 = torch.tensor(x1)
             t1 = torch.tensor(x2)
             result = torch.sigmoid(self.model(t0, t1)).data
-            result = self.deal_result(result.numpy())
+            result = self.deal_result(result.numpy(), request_size, feature_size, feature_values)
             return np.array(result)
         else:
             return "less is more more more more %d" % self.fix
 
-    def get_value(self, parameter):
-        value = self.dict.get(parameter)
-        if value is None:
-            self.__flag = True
-            self.__msg = parameter + " is None"
-        return value
+    def generate_array(self, base_size, base_values, feature_size, feature_values):
+        new_arry = np.zeros((feature_size, base_size))
+        for i in range(feature_size):
+            new_arry[i] = base_values
 
-    def deal_parameters(self, X):
-        self.size = X[0]
-        self.base_size = X[1]
-        self.base_values = X[2]
-        self.feature_size = X[3]
-        self.feature_values = X[4]
+        return np.insert(new_arry, 1, feature_values, axis=1)
 
-        self.base_values = np.array(self.base_values)
-        self.feature_values = np.array(self.feature_values)
-
-        if self.base_values.size != self.base_size:
-            self.__flag = True
-            self.__msg = 'baseSize check failure'
-
-        if self.feature_values.size != self.feature_size:
-            self.__flag = True
-            self.__msg = 'featureSize check failure'
-
-        return self.__flag
-
-    def generate_array(self):
-        new_arry = np.zeros((self.feature_size, self.base_size))
-        for i in range(self.feature_size):
-            new_arry[i] = self.base_values
-
-        self.new_array = np.insert(new_arry, 1, self.feature_values, axis=1)
-        #print(self.new_array)
-
-    def generate_torch_data(self):
+    def generate_torch_data(self, feature_size, new_array):
         xi = []
         xv = []
 
-        for size in range(self.feature_size):
-            t1, t2 = self.trans(self.new_array[size])
+        for size in range(feature_size):
+            t1, t2 = self.trans(new_array[size])
             xi.append(t1)
             xv.append(t2)
 
@@ -113,15 +101,15 @@ class MyModel(object):
         xv = np.array(t2_head + list(aim58[8:]), dtype='float32')
         return (xi, xv)
 
-    def deal_result(self, result):
+    def deal_result(self, result, request_size, feature_size, feature_values):
         dict = {}
-        for i in range(self.feature_size):
-            dict[self.feature_values[i]] = result[i]
+        for i in range(feature_size):
+            dict[feature_values[i]] = result[i]
 
         result_dict = sorted(dict.items(), key=lambda x: x[1], reverse=True)
         size = len(result_dict)
-        if self.size < size:
-            return result_dict[:self.size]
+        if request_size < size:
+            return result_dict[:request_size]
 
         return result_dict
 
