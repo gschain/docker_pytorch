@@ -110,19 +110,21 @@ class MyModel(object):
         #result_dict = sorted(dict.items(), key=lambda x: x[1], reverse=True)
         size = len(result_dict)
         if request_size < size:
-            return dict[:request_size]
+            return result_dict[:request_size]
 
-        return json.dumps(self.aggregation_json(result_dict), cls=NpEncoder)
+        #return json.dumps(self.aggregation_json(result_dict), cls=NpEncoder)
+        return self.aggregation_json(result_dict)
 
     def aggregation_json(self, result_dict):
+        dict1 = {}
         item_list = []
         for (k, v) in result_dict.items():
             item_dict = {}
             item_dict["id"] = k
             item_dict["score"] = v
             item_list.append(item_dict)
-
-        return item_list
+        dict1["all"] = item_list
+        return dict1
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
