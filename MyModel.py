@@ -113,14 +113,15 @@ class MyModel(object):
             return result_dict[:request_size]
 
         #return json.dumps(self.aggregation_json(result_dict), cls=NpEncoder)
+        #json.dumps(self.aggregation_json(result_dict))
         return self.aggregation_json(result_dict)
 
     def aggregation_json(self, result_dict):
         item_list = []
         for (k, v) in result_dict.items():
             item_dict = {}
-            item_dict["id"] = k
-            item_dict["score"] = v
+            item_dict["id"] = int(k)
+            item_dict["score"] = float(v)
             item_list.append(item_dict)
 
         return item_list
