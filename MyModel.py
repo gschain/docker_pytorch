@@ -39,10 +39,10 @@ class MyModel(object):
         feature_names : array of feature names (optional)
         """
         # parse parameters
-        request_size = X[0]
-        base_size = X[1]
+        request_size = int(X[0])
+        base_size = int(X[1])
         base_values = X[2]
-        feature_size = X[3]
+        feature_size = int(X[3])
         feature_values = X[4]
         flag = False
         msg = None
