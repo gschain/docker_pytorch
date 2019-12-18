@@ -1,3 +1,4 @@
+boto
 pandas
 torch
 seldon-core
