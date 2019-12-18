@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.backends.cudnn
 import json
-from DeepFM import DeepFM
+from Network import DeepFM
 import connect_s3
 
 class MyModel(object):
