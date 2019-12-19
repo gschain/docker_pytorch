@@ -10,7 +10,7 @@ class MyModel(object):
     """
     Model template. You can load your model parameters in __init__ from a location accessible at runtime
     """
-    def __init__(self, bucket, model_key):
+    def __init__(self, bucket, model_key, network):
         """
         Add any initialization parameters. These will be passed at runtime from the graph definition parameters defined in your seldondeployment kubernetes resource manifest.
         """
@@ -19,7 +19,7 @@ class MyModel(object):
         print("model key: " + model_key)
         self.loaded = False
         self.model = None
-        self.s3 = connect_s3.ConnectS3(bucket, model_key)
+        self.s3 = connect_s3.ConnectS3(bucket, model_key, network)
 
     def load(self):
         print("start load model")
