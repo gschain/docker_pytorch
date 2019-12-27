@@ -21,6 +21,7 @@ from torch.autograd import Variable
 
 import torch.backends.cudnn
 
+__all__ = ['DeepFM']
 
 """
     网络结构部分

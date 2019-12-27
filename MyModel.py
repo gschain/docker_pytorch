@@ -1,9 +1,9 @@
 import numpy as np
 import torch
 import torch.backends.cudnn
-from Network import DeepFM
 import connect_s3
 import Transform
+import Network
 from importlib import reload
 
 class MyModel(object):
@@ -24,6 +24,7 @@ class MyModel(object):
         if not transform_key is None:
             print("transform key: " + transform_key)
             reload(Transform)
+        reload(Network)
 
     def load(self):
         print("start load model")
