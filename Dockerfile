@@ -11,8 +11,8 @@ ENV API_TYPE REST
 ENV SERVICE_TYPE MODEL
 ENV PERSISTENCE 0
 
-RUN sed -i '3iimport Network' /usr/local/bin/seldon-core-microservice
-RUN sed -i '4imodel_name = Network.__all__[0]' /usr/local/bin/seldon-core-microservice
-RUN sed -i '5ilocals()[model_name] = getattr(Network, model_name)' /usr/local/bin/seldon-core-microservice
+RUN sed -i '4iimport Network' /usr/local/bin/seldon-core-microservice
+RUN sed -i '5imodel_name = Network.__all__[0]' /usr/local/bin/seldon-core-microservice
+RUN sed -i '6ilocals()[model_name] = getattr(Network, model_name)' /usr/local/bin/seldon-core-microservice
 
 CMD python /usr/local/bin/seldon-core-microservice $MODEL_NAME $API_TYPE --service-type $SERVICE_TYPE --persistence $PERSISTENCE
