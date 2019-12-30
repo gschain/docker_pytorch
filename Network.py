@@ -21,7 +21,6 @@ from torch.autograd import Variable
 
 import torch.backends.cudnn
 
-__all__ = ['Network']
 
 """
     网络结构部分
