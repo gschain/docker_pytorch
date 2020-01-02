@@ -72,7 +72,7 @@ class Transform(object):
         #result_dict = sorted(dict.items(), key=lambda x: x[1], reverse=True)
         size = len(result_dict)
         if self.request_size < size:
-            return result_dict[:self.request_size]
+            result_dict = dict(list(result_dict.items())[:self.request_size])
 
         #return json.dumps(self.aggregation_json(result_dict), cls=NpEncoder)
         #json.dumps(self.aggregation_json(result_dict))
