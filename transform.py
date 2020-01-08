@@ -24,17 +24,16 @@ class Transform(object):
             flag = True
             msg = 'featureSize check failure'
 
-        if flag:
-            return "parameter error %s" % msg
+        return flag, "parameter error %s" % msg
 
     def transform_output(self, model):
         new_array = self.generate_array(self.base_size, self.base_values, self.feature_size, self.feature_values)
         x1, x2 = self.generate_torch_data(new_array)
         t0 = torch.tensor(x1)
         t1 = torch.tensor(x2)
+
         result = torch.sigmoid(model(t0, t1)).data
         result = self.deal_result(result.numpy())
-
         return result
 
     def generate_array(self, base_size, base_values, feature_size, feature_values):
