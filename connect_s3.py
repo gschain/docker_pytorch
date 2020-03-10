@@ -15,7 +15,7 @@ class Env:
 
 
 class ConnectS3(object):
-    def __init__(self, bucket, model_key, transform_key, network_key=None):
+    def __init__(self, bucket, model_key, network_key, transform_key=None):
         self.conn = boto.connect_s3(
             aws_access_key_id = Env.judge_env("S3_ACCESS_KEY", "s3_access_key"),
             aws_secret_access_key = Env.judge_env("S3_SECRET_KEY", "s3_secret_key"),
@@ -26,32 +26,37 @@ class ConnectS3(object):
         )
 
         self.model_key = model_key
-        self.create_bucket(bucket)
+        self.network_key = network_key
+        self.bucket = self.conn.get_bucket(bucket)
 
         # get Transform.py
         self.set_transform(transform_key)
 
         model_type = Env.judge_env("MODEL_TYPE", "model_type")
         if model_type == "PT":
-            self.set_pt(network_key)
+            self.set_pt()
 
         # get model data
         self.set_model_data()
-
-    def create_bucket(self, bucket):
-        self.bucket = self.conn.create_bucket(bucket)
 
     def set_model_data(self):
         key = self.bucket.get_key(self.model_key)
         key.get_contents_to_filename("./model.m")
 
-    def set_pt(self, network_key):
-        key = self.bucket.get_key(network_key)
+    def set_pt(self):
+        key = self.bucket.get_key(self.network_key)
         key.get_contents_to_filename("./network.py")
 
     def set_transform(self, transform_key):
         if not transform_key is None:
             key = self.bucket.get_key(transform_key)
             key.get_contents_to_filename("./transform.py")
+
+    def get_version(self):
+        key_path = self.network_key.split("/")
+        if len(key_path) > 1:
+            return key_path[1]
+
+        return None
 
 #s3 = ConnectS3('kubeflow-anonymous-test', "test/2019-12-16T15-47-38Z/test", None,'test/2019-12-16T17-43-41Z/network')
